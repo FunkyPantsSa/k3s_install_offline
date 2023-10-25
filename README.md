@@ -1,0 +1,1 @@
+install k3s airgapped
