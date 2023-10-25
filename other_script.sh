@@ -21,7 +21,7 @@ ipip() {
         echo "设置hosts.."
 
     else
-        echo "124.70.75.116 hub-dev.rockontrol.com #by k3s-custom-hub-dev" >>/etc/hosts
+        echo "124.70.75.2 hub-dev.xxx.com #by k3s-custom-hub-dev" >>/etc/hosts
     fi
 
     #获取ip并进行配置修改
