@@ -1,0 +1,8 @@
+.DS_Store
+tools/nvidia-airgap.tgz
+tools/docker-20.10.2.tgz
+tools/docker-compose
+tools/k3s
+tools/kubectl-inspect-gpushare
+images/base-images.tar
+images/k3s-airgap-images-amd64.tar

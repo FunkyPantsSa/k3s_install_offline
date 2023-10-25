@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pgsql
+  name: pgsql
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: pgsql
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: pgsql
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_USER
+          value: root
+        - name: POSTGRES_PASS
+          value: root123
+        - name: DEFAULT_ENCODING
+          value: UTF8
+        - name: POSTGRES_DBNAME
+          #value: postgres,ai_center,ai_configuration,ai_edge_device_gw,ai_live_decode,ai_notify,ai_statistic,ai_subscribe,ai_gw_model,ai_feature,video_decoder,compound,storage,iot_non_platform_video_proxy,iot_video_hub,decoder_center
+          value: postgres,bupi
+        - name: POSTGRES_MULTIPLE_EXTENSIONS
+          value: postgis,hstore
+        - name: MAX_CONNECTIONS
+          value: "1000"
+        image: hub-dev.rockontrol.com/rk-infra-middleware/postgres-postgis:11.0-2.5-new
+        imagePullPolicy: IfNotPresent
+        name: postgis
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: "500m"
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/postgresql
+          name: data
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: huawei-registry
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /data/pgsql/data
+          type: DirectoryOrCreate
+        name: data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgsql
+spec:
+  ports:
+  - name: 5432-5432
+    nodePort: 35432
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: pgsql
+  type: NodePort

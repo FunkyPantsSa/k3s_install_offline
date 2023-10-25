@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: middleware
+spec:
+  type: ClusterIP
+  ports:
+    - name: api
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+    - name: console
+      port: 9001
+      targetPort: 9001
+      protocol: TCP
+  selector:
+    app: minio
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  namespace: middleware
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        #image: minio/minio
+        image: minio/minio:RELEASE.2022-03-11T23-57-45Z
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - "mkdir -p /data/minio &&minio server /data/minio --console-address ':9001'"
+        env:
+        - name: MINIO_ACCESS_KEY
+          value: "RSU0CYXX8W04NIMPA7SX" # 默认用户名
+        - name: MINIO_SECRET_KEY
+          value: "VD85uhB7LsoEJxUSnmKVO3w2BLWzcm6YOtLJ5BA5" # 默认密码
+        ports:
+        - name: api
+          containerPort: 9000
+          protocol: TCP
+        - name: console
+          containerPort: 9001
+          protocol: TCP
+        volumeMounts:
+        - name: storage
+          mountPath: "/data/minio"
+      nodeSelector:
+        node-role.kubernetes.io/master: "true"
+      volumes:
+      - hostPath:
+          path: /data/minio
+          type: DirectoryOrCreate
+        name: storage
