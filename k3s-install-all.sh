@@ -2,7 +2,11 @@
 set -e
 set -o noglob
 
-. ./docker-install.sh
+
+
+
+#---  docker  install 
+# . ./docker-install.sh
 
 
 # --- helper functions for logs ---
@@ -25,7 +29,7 @@ init_data() {
     STORAGE_URL=https://storage.googleapis.com/k3s-ci-builds
     DOWNLOADER=
 
-    INSTALL_K3S_SKIP_DOWNLOAD=true
+    #INSTALL_K3S_SKIP_DOWNLOAD=true
 
     export K3S_TOKEN="rockontrolk3stokenclusterdeploy"
     #MASTER附加配置
@@ -71,7 +75,8 @@ init_data() {
 
     #INSTALL_K3S_EXEC="server --disable=traefik   --data-dir /data/rancher/k3s --write-kubeconfig /root/.kube/config  --docker --kube-apiserver-arg="authorization-mode=Node,RBAC" --kube-apiserver-arg="allow-privileged=true" --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kube-scheduler-arg="policy-config-file=/etc/kubernetes/scheduler-policy-config.json" --kube-apiserver-arg="service-node-port-range=20000-40000" --kubelet-arg="max-pods=500" "
 
-    INSTALL_K3S_EXEC="$MASTER_WORKER_K3S   --data-dir /data/rancher/k3s --docker --kube-proxy-arg  "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kubelet-arg="max-pods=110" "
+    #INSTALL_K3S_EXEC="$MASTER_WORKER_K3S   --data-dir /data/rancher/k3s --docker --kube-proxy-arg  "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kubelet-arg="max-pods=110" "
+    INSTALL_K3S_EXEC="$MASTER_WORKER_K3S   --data-dir /data/rancher/k3s  --kube-proxy-arg  "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kubelet-arg="max-pods=210" "
 
 }
 #init_data
@@ -905,8 +910,8 @@ eval set -- $(escape "${INSTALL_K3S_EXEC}") $(quote "$@")
 # --- run the install process --
 {
     check_env
-    docker_check
-    prepare_images
+    #docker_check
+    #prepare_images
     verify_system
     setup_env "$@"
     download_and_verify
