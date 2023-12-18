@@ -27,7 +27,7 @@ init_data() {
 
     INSTALL_K3S_SKIP_DOWNLOAD=true
 
-    export K3S_TOKEN="rockontrolk3stokenclusterdeploy"
+    export K3S_TOKEN="k3sTokenClusterDeploy@1234567890"
     #MASTER附加配置
     INSTALL_K3S_MASTER_CONFIG="--disable=traefik --default-local-storage-path /data/local-path --write-kubeconfig /root/.kube/config --kube-apiserver-arg="authorization-mode=Node,RBAC" --kube-apiserver-arg="allow-privileged=true" --kube-apiserver-arg="service-node-port-range=20000-40000" "
 
@@ -72,7 +72,7 @@ init_data() {
     #INSTALL_K3S_EXEC="server --disable=traefik   --data-dir /data/rancher/k3s --write-kubeconfig /root/.kube/config  --docker --kube-apiserver-arg="authorization-mode=Node,RBAC" --kube-apiserver-arg="allow-privileged=true" --kube-proxy-arg "proxy-mode=ipvs" "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kube-scheduler-arg="policy-config-file=/etc/kubernetes/scheduler-policy-config.json" --kube-apiserver-arg="service-node-port-range=20000-40000" --kubelet-arg="max-pods=500" "
 
     INSTALL_K3S_EXEC="$MASTER_WORKER_K3S   --data-dir /data/rancher/k3s --docker --kube-proxy-arg  "masquerade-all=true" --kube-proxy-arg "metrics-bind-address=0.0.0.0" --kubelet-arg="max-pods=110" "
-
+    
 }
 #init_data
 init_data
